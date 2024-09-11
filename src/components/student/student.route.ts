@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { studentController } from './student.controller';
-import { handleValidationErrors } from '../../middlewear/handlevalidationerror';
+import { handleValidationErrors } from '../../middlewear/handlevalidationerror.middlewear';
 import {
   updateStudentValidator,
   addStudentValidator,
   deleteStudentByIdValidator,
   getAbsentOnDate,
 } from './student.validator';
-import {checkForBufferData} from '../../middlewear/checkForBufferData';
+import {checkForBufferData} from '../../middlewear/checkForBufferData.middlewear';
 const studentRouter = Router();
 
 studentRouter.get('/all-students', studentController.getAllStudent);

@@ -29,6 +29,7 @@ const branchSchema: Schema<IBranch> = new Schema({
   departmentId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'batch'
   },
   totalStudentsIntake: {
     type: Number,
@@ -59,6 +60,6 @@ const batchSchema: Schema<IBatch> = new Schema({
  * Mongoose model for the batch collection.
  * @type {Model<IBatch>}
  */
-const Batch: Model<IBatch> = mongoose.model<IBatch>('batches', batchSchema);
+const Batch: Model<IBatch> = mongoose.model<IBatch>('batch', batchSchema);
 
 export { Batch, IBatch };

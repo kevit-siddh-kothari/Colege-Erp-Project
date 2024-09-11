@@ -6,14 +6,14 @@ interface AuthenticatedRequest extends Request {
   token?: string;
 }
 class Authorization {
-  public async authorizationAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+  public async authorizationAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
     try {
       if (req.user?.role === 'admin') {
         return next();
       }
-      res.status(403).send(`only admins are authorized to this path !`);
+      return res.status(403).send(`only admins are authorized to this path !`);
     } catch (error: any) {
-      res.status(500).send(error.message);
+      return res.status(500).send(error.message);
     }
   }
 

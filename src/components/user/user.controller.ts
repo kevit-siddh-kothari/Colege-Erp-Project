@@ -53,10 +53,9 @@ class UserController {
       if (!req.user || !req.token) {
         return res.status(400).json({ error: 'User or token not found' });
       }
-
+      console.log(`hi`);
       if (req.user && req.token) {
-        req.user.tokens = req.user.tokens.filter((token: { token: string }) => token.token !== req.token);
-        await userDAL.updateUserTokens(req.user, req.user.tokens); // Use DAL to update tokens
+        await userDAL.deleteUserTokens(req.user, req.token); // Use DAL to update tokens
         return res.status(200).json({ message: 'Logged out successfully' });
       } else {
         return res.status(404).json({ error: 'User token not found' });
@@ -70,8 +69,8 @@ class UserController {
   public async logOutFromAllDevices(req: AuthenticatedRequest, res: Response): Promise<any> {
     try {
       if (req.user) {
-        req.user.tokens = [];
-        await userDAL.updateUserTokens(req.user, req.user.tokens); // Use DAL to update tokens
+        req.user.tokens=[];
+        await userDAL.DeleteAllUserTokens(req.user, req.user.tokens); // Use DAL to update tokens
         return res.status(200).json({ message: 'Logged out from all devices successfully' });
       } else {
         return res.status(404).json({ error: 'User not found' });

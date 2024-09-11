@@ -31,11 +31,11 @@ const studentSchema: Schema<IStudent> = new mongoose.Schema({
   department: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'departments',
+    ref: 'department',
   },
   batch: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'batches',
+    ref: 'batch',
     required: true,
   },
   currentsem: {
@@ -45,7 +45,7 @@ const studentSchema: Schema<IStudent> = new mongoose.Schema({
 });
 
 // Create a model.
-const Student: Model<IStudent> = mongoose.model<IStudent>('students', studentSchema);
+const Student: Model<IStudent> = mongoose.model<IStudent>('student', studentSchema);
 
 // Export the model.
 export { Student, IStudent };

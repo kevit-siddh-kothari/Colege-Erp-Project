@@ -1,5 +1,7 @@
 import { body } from 'express-validator';
 
+
+
 const loginValidator: any[] = [
   body('username').isString().notEmpty().withMessage('username is required!'),
   body('password').isString().notEmpty().withMessage('password is required!'),
@@ -13,7 +15,7 @@ const signUpValidator: any[] = [
     .notEmpty()
     .withMessage('Role is required')
     .isIn(['admin', 'staffmember', 'student'])
-    .withMessage('Role must be either "admin" or "staffmember"'),
+    .withMessage('Role must be either "admin" or "staffmember" or "student"'),
 ];
 
 export { loginValidator, signUpValidator };

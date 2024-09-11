@@ -20,7 +20,7 @@ const authentication = async (req: AuthenticatedRequest, res: Response, next: Ne
     }
     const secretKey: any = process.env.JWT_SECRET;
     const decoded = jwt.verify(token, secretKey) as { _id: string };
-    const user = await User.findOne({ '_id': decoded._id, 'tokens.token': token });
+    const user = await User.findOne({ '_id': decoded._id, 'tokens': {$elemMatch:{token:{$eq:token}}} });
     if (!user) {
      logger.error('Authentication failed');
      return res.status(404).json({error:`Authentication failed`});

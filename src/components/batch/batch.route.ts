@@ -1,6 +1,6 @@
 import { batchController } from './batch.controller';
 import { Router } from 'express';
-import { handleValidationErrors } from '../../middlewear/handlevalidationerror';
+import { handleValidationErrors } from '../../middlewear/handlevalidationerror.middlewear';
 import { addBatch } from './batch.validator';
 const batchRouter = Router();
 

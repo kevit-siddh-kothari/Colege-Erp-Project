@@ -53,7 +53,7 @@ class StudentController {
         item.branches.forEach((branch: any) => {
           if (branch.departmentId._id.equals(departmenId._id)) {
             if (branch.availableSeats <= 0) {
-              throw new Error(`no more entries`);
+              return res.status(400).json({error:`no more entries`});
             }
           }
         });
@@ -91,9 +91,7 @@ class StudentController {
         return res.status(404).json({error:`no student esixts for this id ${id}`});
       }
       const body: IStudent = req.body;
-      for (let a in body) {
-        student[a] = body[a];
-      }
+      await Student.updateOne({_id: student._id},{$set:body});
       await studentDal.saveStudent(student);
       res.status(200).json({message:'student Updated sucessfully'});
     } catch (error: any) {
@@ -143,7 +141,7 @@ class StudentController {
      await studentDal.DeleteAllAttendance();
       res.status(200).json({message:`All students data is cleared`});
     } catch (error: any) {
-      res.status(400).send(error.message);
+      res.status(500).send(error.message);
     }
   }
 
@@ -267,7 +265,7 @@ class StudentController {
       }
       const batchData = await Batch.find(query).lean();
       if (!batchData.length) {
-        throw new Error(`no output for specified year ${batch}`);
+        return res.status(404).json({error:`no output for specified year ${batch}`});
       }
       for (let batch = 0; batch < batchData.length; batch++) {
         let batchobj: any = {};
