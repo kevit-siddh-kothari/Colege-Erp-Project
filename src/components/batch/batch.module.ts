@@ -29,7 +29,7 @@ const branchSchema: Schema<IBranch> = new Schema({
   departmentId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'batch'
+    ref: 'department'
   },
   totalStudentsIntake: {
     type: Number,
