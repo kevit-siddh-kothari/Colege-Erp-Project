@@ -92,7 +92,6 @@ class StudentController {
       }
       const body: IStudent = req.body;
       await Student.updateOne({_id: student._id},{$set:body});
-      await studentDal.saveStudent(student);
       res.status(200).json({message:'student Updated sucessfully'});
     } catch (error: any) {
       logger.error(error.message);
@@ -176,7 +175,7 @@ class StudentController {
         .populate('student', 'batch currentsem department')
         .lean();
 
-      console.log(attendanceRecords);
+      
 
       if (!attendanceRecords.length) {
         logger.error(`No attendance records found for the date '${date} please add attendance`);
@@ -219,7 +218,7 @@ class StudentController {
         return;
       }
       branchId = department._id;
-      console.log(branchId);
+     
     }
 
     const data: {}[] = [];

@@ -53,7 +53,7 @@ class UserController {
       if (!req.user || !req.token) {
         return res.status(400).json({ error: 'User or token not found' });
       }
-      console.log(`hi`);
+     
       if (req.user && req.token) {
         await userDAL.deleteUserTokens(req.user, req.token); // Use DAL to update tokens
         return res.status(200).json({ message: 'Logged out successfully' });

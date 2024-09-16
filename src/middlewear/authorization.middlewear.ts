@@ -31,7 +31,7 @@ class Authorization {
   public async authorizationStudent(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       if (req.user?.role === 'student') {
-        console.log('hell');
+        
         return next();
       }
       res.status(403).send(`only students are authorized to this path !`);

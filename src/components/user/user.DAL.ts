@@ -18,7 +18,7 @@ class UserDAL {
   }
 
   public async deleteUserTokens(user: any , token: any) {
-    console.log(user, token);
+    
      await User.updateOne({'_id': user._id}, { $pull: {'tokens':{token: token}}})
       .then(() => logger.info(`token delted sucessfully`))
       .catch(err => logger.error(err.message));

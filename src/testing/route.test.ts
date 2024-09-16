@@ -49,10 +49,10 @@ describe('Testing of users api', () => {
         username: "sidg5678d1@gmail.com",
         password: "jdkfdkfkdfjk",
       });
-    console.log(response.status);
+ 
     expect(response.status).toBe(200);  
     token = response.body.token;
-    console.log(token);
+    
   });
   // test('logout api', async(): Promise<void> => {
   //     const response = await request(app)
@@ -96,7 +96,7 @@ describe('Testing of users api', () => {
         if (!date) {
           throw new Error(`no batch on date data`);
         }
-        console.info(`you can alse set query params !`);
+        
         await request(app)
           .get(`/api/students/absent/${date}?batch=&branch=it&currentsem`)
           .set('Authorization', `Bearer ${token}`)
@@ -217,7 +217,7 @@ describe('Testing of users api', () => {
           .send(batchOne)
           .expect(200);
       } catch (error: any) {
-        console.error(error.message);
+        
         throw new Error(error.message);
       }
     });
