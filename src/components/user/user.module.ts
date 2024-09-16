@@ -43,7 +43,7 @@ const usersSchema: Schema<IUser> = new mongoose.Schema(
       enum: Object.values(UserRole),
       default: UserRole.StaffMember
     },
-    tokens: [{token:String}],
+    tokens: [String],
   },
   { timestamps: true },
 );

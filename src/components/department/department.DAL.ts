@@ -30,8 +30,7 @@ class DepartmentDAL {
 
   public async updateDepartment(department: IDepartment, updates: Partial<IDepartment>): Promise<IDepartment | null> {
     try {
-      await Department.findByIdAndUpdate(department._id, updates, {new: true}).exec();
-      return await this.findDepartmentById(department._id);
+      return await Department.findByIdAndUpdate(department._id, updates, {new: true}).exec();
     } catch (error: any) {
       throw new Error(`Error updating department: ${error.message}`);
     }

@@ -70,7 +70,7 @@ class UserController {
     try {
       if (req.user) {
         req.user.tokens=[];
-        await userDAL.DeleteAllUserTokens(req.user, req.user.tokens); // Use DAL to update tokens
+        await userDAL.saveUser(req.user)// Use DAL to update tokens
         return res.status(200).json({ message: 'Logged out from all devices successfully' });
       } else {
         return res.status(404).json({ error: 'User not found' });
