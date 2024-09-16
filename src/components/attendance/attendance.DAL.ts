@@ -11,12 +11,11 @@ class AttendanceDAL {
   }
 
   public async findAttendanceByStudentAndDate(studentId: string, date: string): Promise<IAttendance | null> {
-    return Attendance.findOne({ student: studentId, createdAt: date });
+    return await Attendance.findOne({ student: studentId, createdAt: date });
   }
 
-  public async updateAttendance(attendance: IAttendance, updateData: Partial<IAttendance>): Promise<IAttendance> {
-    await Attendance.findByIdAndUpdate(attendance._id, updateData).exec();
-    return attendance.save();
+  public async updateAttendance(attendance: IAttendance, updateData: Partial<IAttendance>){
+    return await Attendance.findByIdAndUpdate(attendance._id, updateData).exec();
   }
 }
 

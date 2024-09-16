@@ -51,6 +51,7 @@ const branchSchema: Schema<IBranch> = new Schema({
 const batchSchema: Schema<IBatch> = new Schema({
   year: {
     type: Number,
+    unique: true,
     required: true,
   },
   branches: [branchSchema],
