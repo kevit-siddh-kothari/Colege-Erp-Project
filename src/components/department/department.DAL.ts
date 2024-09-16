@@ -20,7 +20,7 @@ class DepartmentDAL {
     }
   }
 
-  public async findDepartmentById(id: string): Promise<IDepartment | null> {
+  public async findDepartmentById(id: string|unknown): Promise<IDepartment | null> {
     try {
       return await Department.findById(id);
     } catch (error: any) {
@@ -28,10 +28,10 @@ class DepartmentDAL {
     }
   }
 
-  public async updateDepartment(department: IDepartment, updates: Partial<IDepartment>): Promise<IDepartment> {
+  public async updateDepartment(department: IDepartment, updates: Partial<IDepartment>): Promise<IDepartment | null> {
     try {
-      Object.assign(department, updates);
-      return await department.save();
+      await Department.findByIdAndUpdate(department._id, updates, {new: true}).exec();
+      return await this.findDepartmentById(department._id);
     } catch (error: any) {
       throw new Error(`Error updating department: ${error.message}`);
     }

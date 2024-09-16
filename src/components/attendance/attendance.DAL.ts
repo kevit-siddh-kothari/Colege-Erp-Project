@@ -15,9 +15,7 @@ class AttendanceDAL {
   }
 
   public async updateAttendance(attendance: IAttendance, updateData: Partial<IAttendance>): Promise<IAttendance> {
-    for (const key in updateData) {
-        attendance[key] = updateData[key];
-    }
+    await Attendance.findByIdAndUpdate(attendance._id, updateData).exec();
     return attendance.save();
   }
 }

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { departmentController } from './department.controller';
 import { handleValidationErrors } from '../../middlewear/handlevalidationerror.middlewear';
-import { addDepartmentValidator, updateDepartmentValidator, deleteDepartmentValidator } from './departmet.validator';
+import { addDepartmentValidator, updateDepartmentValidator, deleteDepartmentValidator } from './department.validator';
 const departmentRouter = Router();
 
 departmentRouter.get('/all-department', departmentController.getAllDepartment);

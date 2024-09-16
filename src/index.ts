@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
 import express, { Application } from 'express';
 import { connectionToDb } from './db-connection/mongodb-connection';
-import { studentRouter } from './components/student/student.routes';
-import { userRouter } from './components/user/user.routes';
+import { studentRouter } from './components/student/student.route';
+import { userRouter } from './components/user/user.route';
 import { departmentRouter } from './components/department/department.route';
-import { attendanceRouter } from './components/attendance/attendance.routes';
-import { batchRouter } from './components/batch/batch.routes';
+import { attendanceRouter } from './components/attendance/attendance.route';
+import { batchRouter } from './components/batch/batch.route';
 import { authentication } from './middlewear/auth.middlewear';
 import { authorization } from './middlewear/authorization.middlewear';
 import { studentInfRouter } from './components/studentInf/stydentInf.route';
