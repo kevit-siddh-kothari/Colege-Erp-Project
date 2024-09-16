@@ -235,7 +235,7 @@ class StudentController {
     });
     res.status(200).json(filteredStudents);
    }catch(error: any){
-    logger.error(`error.message`);
+    logger.error(error.message);
     res.status(500).send(error.message);
    }
   }
