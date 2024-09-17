@@ -2,165 +2,271 @@ import { Student, IStudent } from './student.module';
 import { Department } from '../department/department.module';
 import { Attendance } from '../attendance/attendance.module';
 import { Batch, IBatch } from '../batch/batch.module';
+import { logger } from '../../utils/winstone.logger';
 
 class StudentDal {
+  /**
+   * Find a student by ID.
+   * @param id - The student ID.
+   * @returns The student object or null.
+   * @throws Error if the query fails.
+   */
+  public async StudentFindOne(id: any): Promise<IStudent | null> {
+    try {
+      return await Student.findOne({ _id: id });
+    } catch (error: any) {
+      logger.error(`Error finding student by ID: ${error.message}`);
+      throw new Error(`Unable to find student: ${error.message}`);
+    }
+  }
 
-  public async StudentFindOne(id:any): Promise<any>{
-    return await Student.findOne({ _id: id })
-  }  
-
+  /**
+   * Get the total number of students.
+   * @returns The total count of students.
+   * @throws Error if the query fails.
+   */
   public async StudentCount(): Promise<number> {
-    const num = await Student.find().countDocuments();
-    return num;
+    try {
+      return await Student.countDocuments();
+    } catch (error: any) {
+      logger.error(`Error counting students: ${error.message}`);
+      throw new Error(`Unable to count students: ${error.message}`);
+    }
   }
 
-  public async DepartmentFind(branch: any): Promise<any> {
-    return await Department.findOne({ departmentname: branch }, { _id: 1 });
+  /**
+   * Find a department by name.
+   * @param branch - The department name.
+   * @returns The department object or null.
+   * @throws Error if the query fails.
+   */
+  public async DepartmentFind(branch: string): Promise<any> {
+    try {
+      return await Department.findOne({ departmentname: branch }, { _id: 1 });
+    } catch (error: any) {
+      logger.error(`Error finding department: ${error.message}`);
+      throw new Error(`Unable to find department: ${error.message}`);
+    }
   }
 
+  /**
+   * Get analytics data for students, grouped by department and batch.
+   * @returns Aggregated data of students by year and department.
+   * @throws Error if the aggregation fails.
+   */
   public async getAnalyticsData(): Promise<any> {
-    return await await Student.aggregate([
-      // Stage 1: Lookup to populate department details
-      {
-        $lookup: {
-          from: 'departments', // The collection to join with
-          localField: 'department', // Field from the input documents
-          foreignField: '_id', // Field from the documents of the "departments" collection
-          as: 'departmentInfo', // Name of the new array field to add
-        },
-      },
-      // Stage 2: Unwind the departmentInfo array to get department details in each document
-      {
-        $unwind: {
-          path: '$departmentInfo',
-          preserveNullAndEmptyArrays: false,
-        },
-      },
-      // Stage 3: Group by year and department to count total students per branch
-      {
-        $group: {
-          _id: {
-            year: '$batch',
-            branch: '$departmentInfo.departmentname', // Adjust this field based on department structure
+    try {
+      return await Student.aggregate([
+        {
+          $lookup: {
+            from: 'departments',
+            localField: 'department',
+            foreignField: '_id',
+            as: 'departmentInfo',
           },
-          totalStudents: { $sum: 1 },
         },
-      },
-      // Stage 4: Group by year and aggregate branch counts
-      {
-        $group: {
-          _id: '$_id.year',
-          totalStudents: { $sum: '$totalStudents' },
-          branches: {
-            $push: {
-              k: '$_id.branch',
-              v: '$totalStudents',
+        {
+          $unwind: '$departmentInfo',
+        },
+        {
+          $group: {
+            _id: {
+              year: '$batch',
+              branch: '$departmentInfo.departmentname',
+            },
+            totalStudents: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: '$_id.year',
+            totalStudents: { $sum: '$totalStudents' },
+            branches: {
+              $push: {
+                k: '$_id.branch',
+                v: '$totalStudents',
+              },
             },
           },
         },
-      },
-      // Stage 5: Convert branch array to an object
-      {
-        $project: {
-          _id: 0,
-          year: '$_id',
-          totalStudents: 1,
-          branches: {
-            $arrayToObject: {
-              $map: {
-                input: '$branches',
-                as: 'branch',
-                in: {
-                  k: '$$branch.k',
-                  v: '$$branch.v',
+        {
+          $project: {
+            _id: 0,
+            year: '$_id',
+            totalStudents: 1,
+            branches: {
+              $arrayToObject: {
+                $map: {
+                  input: '$branches',
+                  as: 'branch',
+                  in: {
+                    k: '$$branch.k',
+                    v: '$$branch.v',
+                  },
                 },
               },
             },
           },
         },
-      },
-      // Stage 6: Sort by year (optional)
-      {
-        $sort: {
-          year: 1,
+        {
+          $sort: { year: 1 },
         },
-      },
-    ]);
+      ]);
+    } catch (error: any) {
+      logger.error(`Error getting analytics data: ${error.message}`);
+      throw new Error(`Unable to get analytics data: ${error.message}`);
+    }
   }
 
-  public async FindDepartmentById(branchId: any): Promise<any> {
-    return await Department.findOne({ _id: branchId }, { _id: 1 }).lean();
+  /**
+   * Find department by its ID.
+   * @param branchId - The department ID.
+   * @returns The department object or null.
+   * @throws Error if the query fails.
+   */
+  public async FindDepartmentById(branchId: string): Promise<any> {
+    try {
+      return await Department.findOne({ _id: branchId }, { _id: 1 }).lean();
+    } catch (error: any) {
+      logger.error(`Error finding department by ID: ${error.message}`);
+      throw new Error(`Unable to find department: ${error.message}`);
+    }
   }
 
+  /**
+   * Get the total number of students marked as present.
+   * @returns Aggregated attendance data for all students.
+   * @throws Error if the aggregation fails.
+   */
   public async GetTotalStudentsPresent(): Promise<any> {
-    return await await Attendance.aggregate([
-      // Stage 1: Lookup to populate student details
-      {
-        $lookup: {
-          from: 'students', // The collection to join with
-          localField: 'student', // The field from the input documents
-          foreignField: '_id', // The field from the student collection
-          as: 'studentInfo', // Name of the new array field to add
-        },
-      },
-      // Stage 2: Unwind the studentInfo array to get student details in each document
-      {
-        $unwind: '$studentInfo',
-      },
-      // Stage 3: Group by student and calculate total presence
-      {
-        $group: {
-          _id: '$studentInfo', // Group by studentInfo after population
-          TotalPresent: {
-            $sum: { $cond: { if: { $eq: ['$isPresent', true] }, then: 1, else: 0 } },
+    try {
+      return await Attendance.aggregate([
+        {
+          $lookup: {
+            from: 'students',
+            localField: 'student',
+            foreignField: '_id',
+            as: 'studentInfo',
           },
         },
-      },
-    ]);
-  }
-
-  public async getTotalStudentByBatchAndDepartment(): Promise<any>{
-    return await Student.aggregate([
+        {
+          $unwind: '$studentInfo',
+        },
         {
           $group: {
-            _id: {
-              batch: "$batch",
-              department: "$department"
+            _id: '$studentInfo',
+            TotalPresent: {
+              $sum: { $cond: [{ $eq: ['$isPresent', true] }, 1, 0] },
             },
-            count: { $sum: 1 }
-          }
-        }
-      ]
-    );
+          },
+        },
+      ]);
+    } catch (error: any) {
+      logger.error(`Error getting total students present: ${error.message}`);
+      throw new Error(`Unable to get total students present: ${error.message}`);
+    }
   }
 
-  public async BatchUpdateForDelete(exists: any): Promise<any>{
-    await Batch.updateOne(
+  /**
+   * Get the total number of students grouped by batch and department.
+   * @returns Aggregated student data grouped by batch and department.
+   * @throws Error if the aggregation fails.
+   */
+  public async getTotalStudentByBatchAndDepartment(): Promise<any> {
+    try {
+      return await Student.aggregate([
+        {
+          $group: {
+            _id: { batch: '$batch', department: '$department' },
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+    } catch (error: any) {
+      logger.error(`Error getting total students by batch and department: ${error.message}`);
+      throw new Error(`Unable to get total students by batch and department: ${error.message}`);
+    }
+  }
+
+  /**
+   * Update the batch after a student is deleted and update the seat counts.
+   * @param exists - The existing student and batch information.
+   * @throws Error if the update or deletion fails.
+   */
+  public async BatchUpdateForDelete(exists: any): Promise<void> {
+    try {
+      await Batch.updateOne(
         { '_id': exists.batch, 'branches.departmentId': exists.department },
-        { $inc: { 'branches.$.availableSeats': 1, 'branches.$.occupiedSeats': -1 } },
+        { $inc: { 'branches.$.availableSeats': 1, 'branches.$.occupiedSeats': -1 } }
       );
-    await Student.deleteOne({ _id: exists._id });
-    await Attendance.deleteMany({ student: exists._id });
-    return;
+      await Student.deleteOne({ _id: exists._id });
+      await Attendance.deleteMany({ student: exists._id });
+    } catch (error: any) {
+      logger.error(`Error updating batch for delete: ${error.message}`);
+      throw new Error(`Unable to update batch or delete student: ${error.message}`);
+    }
   }
 
-  public async DeleteAllStudent(): Promise<any>{
-    return await Student.deleteMany({});
+  /**
+   * Delete all students from the database.
+   * @returns A result object from the deletion.
+   * @throws Error if the deletion fails.
+   */
+  public async DeleteAllStudent(): Promise<any> {
+    try {
+      return await Student.deleteMany({});
+    } catch (error: any) {
+      logger.error(`Error deleting all students: ${error.message}`);
+      throw new Error(`Unable to delete all students: ${error.message}`);
+    }
   }
 
-  public async DeleteAllAttendance(): Promise<any>{
-    return await Attendance.deleteMany({});
+  /**
+   * Delete all attendance records.
+   * @returns A result object from the deletion.
+   * @throws Error if the deletion fails.
+   */
+  public async DeleteAllAttendance(): Promise<any> {
+    try {
+      return await Attendance.deleteMany({});
+    } catch (error: any) {
+      logger.error(`Error deleting all attendance records: ${error.message}`);
+      throw new Error(`Unable to delete all attendance records: ${error.message}`);
+    }
   }
 
-  public async UpdateBatchOnStudentAdd(batchId: any, departmenId: any): Promise<any>{
-    return  await Batch.updateOne(
-        { '_id': batchId, 'branches.departmentId': departmenId },
-        { $inc: { 'branches.$.availableSeats': -1, 'branches.$.occupiedSeats': 1 } },
+  /**
+   * Update the batch after a student is added and update seat counts.
+   * @param batchId - The ID of the batch.
+   * @param departmentId - The ID of the department.
+   * @returns The result of the batch update.
+   * @throws Error if the update fails.
+   */
+  public async UpdateBatchOnStudentAdd(batchId: string, departmentId: string): Promise<any> {
+    try {
+      return await Batch.updateOne(
+        { '_id': batchId, 'branches.departmentId': departmentId },
+        { $inc: { 'branches.$.availableSeats': -1, 'branches.$.occupiedSeats': 1 } }
       );
+    } catch (error: any) {
+      logger.error(`Error updating batch on student add: ${error.message}`);
+      throw new Error(`Unable to update batch on student add: ${error.message}`);
+    }
   }
 
-  public async saveStudent(student:IStudent): Promise<any>{
-    return await student.save();
+  /**
+   * Save a student to the database.
+   * @param student - The student object to save.
+   * @returns The saved student object.
+   * @throws Error if the save fails.
+   */
+  public async saveStudent(student: IStudent): Promise<IStudent> {
+    try {
+      return await student.save();
+    } catch (error: any) {
+      logger.error(`Error saving student: ${error.message}`);
+      throw new Error(`Unable to save student: ${error.message}`);
+    }
   }
 }
 
