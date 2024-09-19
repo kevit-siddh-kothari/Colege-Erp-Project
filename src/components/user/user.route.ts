@@ -12,7 +12,7 @@ const userRouter = Router();
 // Define routes
 userRouter.post('/login', checkForBufferData,...loginValidator, handleValidationErrors, userController.logIn);
 
-userRouter.post('/signup', checkForBufferData ,authentication, authorization.authorizationSuperAdmin, ...signUpValidator, handleValidationErrors, userController.signUp);
+userRouter.post('/signup', checkForBufferData ,authentication, ...signUpValidator, handleValidationErrors, userController.signUp);
 
 userRouter.post('/logout', checkForBufferData,authentication, userController.logOut);
 
