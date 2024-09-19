@@ -8,12 +8,13 @@ import { attendanceRouter } from './components/attendance/attendance.route';
 import { batchRouter } from './components/batch/batch.route';
 import { authentication } from './middlewear/auth.middlewear';
 import { authorization } from './middlewear/authorization.middlewear';
-import { studentInfRouter } from './components/studentInf/stydentInf.route';
+import { studentInfRouter } from './components/studentInf/studentInf.route';
 import bodyParser from 'body-parser';
 
 dotenv.config();
 
 const connectionUrl: string = process.env.MONGODB_URL as string;
+
 const port: string| undefined = process.env.PORT || undefined;
 
 /**
@@ -35,7 +36,7 @@ app.use(express.urlencoded({ extended: false }));
 /*******************************
  * MIDDLEWARE - ROUTES
  *******************************/
-app.use('/api/user', userRouter);
+app.use('/api/user', authentication, authorization.authorizationSuperAdmin , userRouter);
 app.use('/api/students', authentication,authorization.authorizationAdminOrStaff, studentRouter);
 app.use('/api/departments', authentication, authorization.authorizationAdmin, departmentRouter);
 app.use('/api/attendance', authentication, authorization.authorizationAdminOrStaff, attendanceRouter);

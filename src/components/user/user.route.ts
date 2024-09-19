@@ -11,11 +11,11 @@ const userRouter = Router();
 // Define routes
 userRouter.post('/login', checkForBufferData,...loginValidator, handleValidationErrors, userController.logIn);
 
-userRouter.post('/signup', checkForBufferData, ...signUpValidator, handleValidationErrors, userController.signUp);
+userRouter.post('/signup', checkForBufferData ,...signUpValidator, handleValidationErrors, userController.signUp);
 
-userRouter.post('/logout', checkForBufferData, authentication, userController.logOut);
+userRouter.post('/logout', checkForBufferData, userController.logOut);
 
-userRouter.post('/logoutall', checkForBufferData, authentication, userController.logOutFromAllDevices);
+userRouter.post('/logoutall', checkForBufferData, userController.logOutFromAllDevices);
 
 // Export the router
 export { userRouter };

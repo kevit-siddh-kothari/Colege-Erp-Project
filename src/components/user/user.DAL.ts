@@ -52,6 +52,16 @@ class UserDAL {
       throw new Error(`Unable to delete user token: ${error.message}`);
     }
   }
+
+  public async updateToken(user:IUser){
+    try{
+      return await User.updateOne({_id:user.id},{$set:{ tokens : []}})
+    }catch(error: any){
+      logger.error(error.message);
+      throw new Error(error.message);
+    }
+  }
 }
+
 
 export const userDAL = new UserDAL();

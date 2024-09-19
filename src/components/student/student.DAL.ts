@@ -40,7 +40,7 @@ class StudentDal {
    * @returns The department object or null.
    * @throws Error if the query fails.
    */
-  public async DepartmentFind(branch: string): Promise<any> {
+  public async DepartmentFind(branch: unknown): Promise<any> {
     try {
       return await Department.findOne({ departmentname: branch }, { _id: 1 });
     } catch (error: any) {
@@ -124,7 +124,7 @@ class StudentDal {
    * @returns The department object or null.
    * @throws Error if the query fails.
    */
-  public async FindDepartmentById(branchId: string): Promise<any> {
+  public async FindDepartmentById(branchId: unknown): Promise<any> {
     try {
       return await Department.findOne({ _id: branchId }, { _id: 1 }).lean();
     } catch (error: any) {
@@ -242,7 +242,7 @@ class StudentDal {
    * @returns The result of the batch update.
    * @throws Error if the update fails.
    */
-  public async UpdateBatchOnStudentAdd(batchId: string, departmentId: string): Promise<any> {
+  public async UpdateBatchOnStudentAdd(batchId: string, departmentId: unknown): Promise<any> {
     try {
       return await Batch.updateOne(
         { '_id': batchId, 'branches.departmentId': departmentId },

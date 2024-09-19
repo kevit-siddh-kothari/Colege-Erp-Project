@@ -69,8 +69,7 @@ class UserController {
   public async logOutFromAllDevices(req: AuthenticatedRequest, res: Response): Promise<any> {
     try {
       if (req.user) {
-        req.user.tokens=[];
-        await userDAL.saveUser(req.user)// Use DAL to update tokens
+        await userDAL.updateToken(req.user)// Use DAL to update tokens
         return res.status(200).json({ message: 'Logged out from all devices successfully' });
       } else {
         return res.status(404).json({ error: 'User not found' });

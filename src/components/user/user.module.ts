@@ -11,6 +11,7 @@ enum UserRole {
   StaffMember = 'staffmember',
   Admin = 'admin',
   Student = 'student',
+  SuperAdmin = 'superAdmin'
 };
 /**
  * Define an interface representing a user document in MongoDB.

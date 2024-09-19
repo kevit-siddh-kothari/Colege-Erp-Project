@@ -39,11 +39,11 @@ class AttendanceDAL {
    * @returns The attendance record or null.
    * @throws Error if the query fails.
    */
-  public async findAttendanceByStudentAndDate(studentId: string, date: string): Promise<IAttendance | null> {
+  public async findAttendanceByStudentAndDate(attendanceId: string): Promise<IAttendance | null> {
     try {
-      return await Attendance.findOne({ student: studentId, createdAt: date });
+      return await Attendance.findById(attendanceId);
     } catch (error: any) {
-      logger.error(`Error finding attendance for student ${studentId} on ${date}: ${error.message}`);
+      logger.error(`Error finding attendance for student ${attendanceId}: ${error.message}`);
       throw new Error(`Unable to find attendance: ${error.message}`);
     }
   }

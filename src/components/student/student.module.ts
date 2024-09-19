@@ -18,6 +18,7 @@ interface IStudent extends Document {
 const studentSchema: Schema<IStudent> = new mongoose.Schema({
   username: {
     type: String,
+    unique: true,
     required: true,
   },
   name: {

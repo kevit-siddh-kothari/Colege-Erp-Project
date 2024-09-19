@@ -41,23 +41,22 @@ class StudentController {
         return res.status(404).json({error:`No department with name ${req.body.departmentname} exists`});
       }
       //for checking the avaibaility of student entry in database
-      const batchData: IBatch = await Batch.find(
+      const batchData = await Batch.findOne(
         { _id: req.body.batch, 'branches.departmentId': departmenId._id },
         { branches: 1, _id: 0 },
       ).lean();
-      if (batchData.length === 0) {
+      if (!batchData) {
         logger.error(`no batch exist in the year ${req.body.batch}`);
         return res.status(404).json({error:`no batch exist in the year ${req.body.batch} please also check that department is current available`});
       }
-      batchData.forEach((item: any) => {
-        item.branches.forEach((branch: any) => {
+        batchData.branches.forEach((branch: any) => {
           if (branch.departmentId._id.equals(departmenId._id)) {
             if (branch.availableSeats <= 0) {
               return res.status(400).json({error:`no more entries`});
             }
           }
         });
-      });
+
       const student: IStudent = new Student({
         username: req.body.username,
         name: req.body.name,
@@ -87,7 +86,7 @@ class StudentController {
       const { id } = req.params;
       const student: IStudent | null = await Student.findOne({ _id: id });
       if (!student) {
-        logger.error(`no student esixts bu this id ${id}`);
+        logger.error(`no student esixts on this id ${id}`);
         return res.status(404).json({error:`no student esixts for this id ${id}`});
       }
       const body: IStudent = req.body;

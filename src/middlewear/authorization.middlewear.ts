@@ -39,5 +39,17 @@ class Authorization {
       res.status(500).send(error.message);
     }
   }
+
+  public async authorizationSuperAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      if (req.user?.role === 'superAdmin') {
+        
+        return next();
+      }
+      res.status(403).send(`only students are authorized to this path !`);
+    } catch (error: any) {
+      res.status(500).send(error.message);
+    }
+  }
 }
 export const authorization = new Authorization();
