@@ -7,7 +7,12 @@ import bcrypt from 'bcrypt';
 interface IToken {
   token: string;
 }
-
+enum UserRole {
+  StaffMember = 'staffmember',
+  Admin = 'admin',
+  Student = 'student',
+  SuperAdmin = 'superAdmin'
+};
 /**
  * Define an interface representing a user document in MongoDB.
  * Extends Document to inherit properties and methods like save(), _id, etc.
@@ -16,7 +21,7 @@ interface IUser extends Document {
   _id: mongoose.Schema.Types.ObjectId | string;
   username: string;
   password: string;
-  role: 'staffmember' | 'admin' | 'student';
+  role: UserRole;
   tokens: IToken[];
 }
 
@@ -36,16 +41,10 @@ const usersSchema: Schema<IUser> = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['staffmember', 'admin', 'student'],
-      default: 'staffmember',
+      enum: Object.values(UserRole),
+      default: UserRole.StaffMember
     },
-    tokens: [
-      {
-        token: {
-          type: String,
-        },
-      },
-    ],
+    tokens: [String],
   },
   { timestamps: true },
 );
@@ -73,6 +72,6 @@ usersSchema.methods.getPublicProfile = function () {
 /**
  * Create a model based on the schema and interface.
  */
-const User: Model<IUser> = mongoose.model<IUser>('users', usersSchema);
+const User: Model<IUser> = mongoose.model<IUser>('user', usersSchema);
 
-export { User, IUser };
+export { User, IUser, UserRole };

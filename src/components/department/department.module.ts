@@ -22,7 +22,7 @@ const departmentSchema: Schema<IDepartment> = new mongoose.Schema(
 );
 
 // Create a model.
-const Department: Model<IDepartment> = mongoose.model<IDepartment>('departments', departmentSchema);
+const Department: Model<IDepartment> = mongoose.model<IDepartment>('department', departmentSchema);
 
 // Export the model.
 export { Department, IDepartment };

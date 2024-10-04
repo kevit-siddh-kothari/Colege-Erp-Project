@@ -16,7 +16,7 @@ const attendanceSchema: Schema<IAttendance> = new mongoose.Schema(
     student: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'students',
+      ref: 'student',
     },
     isPresent: {
       type: Boolean,

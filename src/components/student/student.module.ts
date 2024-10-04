@@ -6,7 +6,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
  **/
 interface IStudent extends Document {
   [key: string]: any; // fro student controller updating api endpoint
-  username?: string,
+  username?: string;
   name?: string;
   phno?: number;
   department?: mongoose.Schema.Types.ObjectId | undefined;
@@ -16,8 +16,9 @@ interface IStudent extends Document {
 
 // Create a schema corresponding to the document interface.
 const studentSchema: Schema<IStudent> = new mongoose.Schema({
-  username:{
+  username: {
     type: String,
+    unique: true,
     required: true,
   },
   name: {
@@ -31,11 +32,11 @@ const studentSchema: Schema<IStudent> = new mongoose.Schema({
   department: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'departments',
+    ref: 'department',
   },
   batch: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'batches',
+    ref: 'batch',
     required: true,
   },
   currentsem: {
@@ -45,7 +46,7 @@ const studentSchema: Schema<IStudent> = new mongoose.Schema({
 });
 
 // Create a model.
-const Student: Model<IStudent> = mongoose.model<IStudent>('students', studentSchema);
+const Student: Model<IStudent> = mongoose.model<IStudent>('student', studentSchema);
 
 // Export the model.
 export { Student, IStudent };

@@ -6,7 +6,7 @@ const {app } = require('../index');
 
 const userOne = {
   username: "sidg5678d1@gmail.com",
-  password: "skjdkjds",
+  password: "jdkfdkfkdfjk",
   role: "admin",
 };
 
@@ -47,12 +47,12 @@ describe('Testing of users api', () => {
       .post('/api/user/login')
       .send({
         username: "sidg5678d1@gmail.com",
-        password: "skjdkjds",
+        password: "jdkfdkfkdfjk",
       });
-   
+ 
     expect(response.status).toBe(200);  
     token = response.body.token;
-   
+    
   });
   // test('logout api', async(): Promise<void> => {
   //     const response = await request(app)
@@ -96,7 +96,7 @@ describe('Testing of users api', () => {
         if (!date) {
           throw new Error(`no batch on date data`);
         }
-       
+        
         await request(app)
           .get(`/api/students/absent/${date}?batch=&branch=it&currentsem`)
           .set('Authorization', `Bearer ${token}`)
